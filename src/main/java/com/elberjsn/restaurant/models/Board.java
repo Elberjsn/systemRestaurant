@@ -1,0 +1,28 @@
+package com.elberjsn.restaurant.models;
+
+import com.elberjsn.restaurant.models.utils.StatusBoard;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@NoArgsConstructor
+public class Board {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private int number;
+    private int capacity;
+    private StatusBoard status = StatusBoard.FREE;
+    private String type;
+
+    @OneToOne(mappedBy = "board")
+    private Reserve reserve;
+}
