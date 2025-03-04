@@ -1,12 +1,16 @@
 package com.elberjsn.restaurant.models;
 
 import java.time.LocalTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NonNull;
@@ -24,26 +28,44 @@ public class Restaurant {
 
     @NonNull
     private String name;
+
     private String address;
-    @NonNull
+    
     private String phone;
     private String email;
+    
     @NonNull
     private String cnpj;
-    @NonNull
+    
     private LocalTime opening;
-    @NonNull
+    
     private LocalTime closed;
+
+    private String password;
     
     private String site;
     private String typeKitchen;
 
-    @OneToOne(mappedBy = "restaurant")
-    private Employee employee;
+   
+
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Employee> employee;
 
     @OneToOne
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private Product product;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private List<Board> board;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
+
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Consumption> consumptions;
+
+
 
 
 }

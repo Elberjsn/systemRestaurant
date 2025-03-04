@@ -1,7 +1,6 @@
 package com.elberjsn.restaurant.models;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -22,9 +21,8 @@ public class Reserve {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate dtReserve;
-    private LocalTime hrStart;
-    private LocalDate hrEnd;
+    private LocalDateTime dtReserveStart;
+    private LocalDateTime dtReserveEnd;
     private String status;
     private int quantity;
     private String obs;
@@ -40,5 +38,4 @@ public class Reserve {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "control_id",referencedColumnName = "id")
     private Control control;
-
 }

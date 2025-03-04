@@ -1,0 +1,59 @@
+package com.elberjsn.restaurant.service;
+
+import java.time.LocalDateTime;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.elberjsn.restaurant.models.Control;
+import com.elberjsn.restaurant.models.utils.StatusControl;
+import com.elberjsn.restaurant.repository.ControlRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
+@Service
+public class ControlService {
+
+    @Autowired
+    ControlRepository controlRepository;
+
+    @Autowired
+    ConsumptionService consumptionService;
+
+    public Control initControl(Control control) {
+        return controlRepository.save(control);
+    }
+
+    public Control controlById(Long id) {
+        return controlRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Não Encontrado!"));
+    }
+    public Control controlByNumber(int number){
+        return controlRepository.findByNumber(number).orElseThrow(() -> new EntityNotFoundException("Não Encontrado!"));
+    }
+
+    public Double valueTotalControl(Long controlId) {
+       return consumptionService.valueTotalByControlId(controlId);
+    }
+    public Control editControl(Control control){
+        var newControl = controlById(control.getId());
+        newControl.setDtOpen(control.getDtOpen());
+        newControl.setDtClosed(control.getDtClosed());
+        newControl.setStatus(control.getStatus());
+        newControl.setPaymentMethod(control.getPaymentMethod());
+        newControl.setReserve(control.getReserve());
+
+        return controlRepository.save(newControl);
+    }
+    public void paymentControl(Long id,String pay){
+        var payControl = controlById(id);
+
+        payControl.setDtClosed(LocalDateTime.now());
+        payControl.setPaymentMethod(pay);
+        payControl.setStatus(StatusControl.PAY);
+    }
+    public void deleteControl(Long id){
+        Control c = controlById(id);
+        c.setStatus(StatusControl.CLOSED);
+        controlRepository.save(c);
+    }
+}

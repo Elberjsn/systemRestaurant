@@ -1,11 +1,11 @@
 package com.elberjsn.restaurant.models;
 
-import com.elberjsn.restaurant.models.utils.StatusBoard;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,9 +20,12 @@ public class Board {
 
     private int number;
     private int capacity;
-    private StatusBoard status = StatusBoard.FREE;
     private String type;
 
     @OneToOne(mappedBy = "board")
     private Reserve reserve;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 }

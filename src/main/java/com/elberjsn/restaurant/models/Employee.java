@@ -2,13 +2,13 @@ package com.elberjsn.restaurant.models;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -25,16 +25,18 @@ public class Employee {
     @NonNull
     private String name;
     @NonNull
+    @Column(unique = true)
     private String cpf;
+    private String password;
     private LocalDate dtBirth;
     @NonNull
     private String phone;
-    private String cargo;
+    private String position;
     private LocalDate dtAdmission;
     private Double salary;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "restaurant_id",referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name ="restaurant_id")
     private Restaurant restaurant;
 
 }
