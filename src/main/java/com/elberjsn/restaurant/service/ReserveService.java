@@ -1,16 +1,17 @@
 package com.elberjsn.restaurant.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.elberjsn.restaurant.models.Board;
 import com.elberjsn.restaurant.models.Reserve;
 import com.elberjsn.restaurant.repository.ReserveRepository;
 
-
+@Service
 public class ReserveService {
 
     @Autowired
@@ -20,16 +21,7 @@ public class ReserveService {
     BoardService boardService = new BoardService();
 
     
-    public List<Long> freeBoards(Reserve reserve, Long restaurant){
-        //mesas no restaurantes
-        List<Long> allBoards = boardService.allBoards(restaurant).stream().map(Board::getId).collect(Collectors.toList());
-
-
-        List<Long> reservedBoard = reserveRepository.findBoardIdsByRestaurantIdAndBetween(restaurant, reserve.getDtReserveStart(), reserve.getDtReserveEnd());
-
-        return allBoards.stream().filter(board -> reservedBoard.contains(board)).collect(Collectors.toList());
-    } 
-
+    
     public Boolean verificHours(Reserve reserve,Long restaurant){
 
         var hours = restaurantService.openingHours(restaurant);
@@ -46,6 +38,11 @@ public class ReserveService {
         }else{
             return null;
         }
+    }
+
+    public Optional<Reserve> findReserveByDay(LocalDate dt){
+        
+        return reserveRepository.findByDtReserveStartBetween(dt.atTime(LocalTime.MIN), dt.atTime(LocalTime.MAX));
     }
     
     

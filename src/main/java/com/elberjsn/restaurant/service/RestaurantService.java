@@ -4,12 +4,14 @@ import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.elberjsn.restaurant.models.Restaurant;
 import com.elberjsn.restaurant.repository.RestaurantRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
+@Service
 public class RestaurantService {
 
     @Autowired
@@ -48,6 +50,12 @@ public class RestaurantService {
 
         return save(newRestaurant);
 
+    }
+
+    public String loginRestaurant(Restaurant restaurant){
+        Restaurant login = restaurantRepository.findByCnpjAndPassword(restaurant.getCnpj(), restaurant.getPassword()).orElseThrow(()-> new EntityNotFoundException());
+        
+        return login.getCnpj();
     }
 
 }

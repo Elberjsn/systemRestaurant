@@ -23,9 +23,7 @@ public class ConsumptionService {
     public List<Consumption> allConsumption(){
         return consumptionRepository.findAll();
     }
-    public List<Consumption> allConsumptionByRestaurant(Long id){
-        return consumptionRepository.findByRestaurantId(id);
-    }
+   
     public Consumption consumptionById(Long id){
         return consumptionRepository.findById(id).orElseThrow(
             ()-> new EntityNotFoundException("Consumo não encontrado!")

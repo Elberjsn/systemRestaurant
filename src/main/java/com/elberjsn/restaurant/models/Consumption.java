@@ -36,10 +36,4 @@ public class Consumption {
     @JoinColumn(name ="control_id")
     private Control control;
 
-    @ManyToOne
-    @JoinColumn(name ="restaurant_id")
-    private Restaurant restaurant;
-
-
-
 }

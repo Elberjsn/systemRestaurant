@@ -20,20 +20,11 @@ public class BoardService {
         return boardRepository.save(board);
     }
     public List<Board> allBoards(Long idRestaurant){
-        return boardRepository.findAllByRestaurantId(idRestaurant);
+        return boardRepository.findAll();
     }
-    public Board boardByNumberInRestaurant(int number,Long idRestaurant){
-        return boardRepository.findByNumberInRestaurantId(number,idRestaurant).get();
-    }
+   
 
-    @Transactional
-    public Board editBoard(Board board){
-        var edit_Board = boardRepository.findByNumberInRestaurantId(board.getNumber(), board.getRestaurant().getId()).get();
-        edit_Board.setCapacity(board.getCapacity());
-        edit_Board.setType(board.getType());
-        
-        return saveBoard(edit_Board);
-    }
+   
     
    
     @Transactional

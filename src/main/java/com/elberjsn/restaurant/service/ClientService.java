@@ -32,9 +32,7 @@ public class ClientService {
     public Client clientByEmail(String phone){
         return clientRepository.findByPhone(phone).orElseThrow(()-> new EntityNotFoundException("Cliente não encontrado"));
     }
-    public List<Client> clientsByRestaurant(Long id){
-        return clientRepository.findAllClientInRestaurantId(id);
-    }
+    
 
     @Transactional
     public Client editClient(Client client){

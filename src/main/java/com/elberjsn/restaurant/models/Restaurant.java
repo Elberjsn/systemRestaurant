@@ -13,7 +13,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Data
@@ -26,7 +25,7 @@ public class Restaurant {
     private Long id;
 
 
-    @NonNull
+    
     private String name;
 
     private String address;
@@ -34,13 +33,14 @@ public class Restaurant {
     private String phone;
     private String email;
     
-    @NonNull
+    
     private String cnpj;
     
     private LocalTime opening;
     
     private LocalTime closed;
 
+    
     private String password;
     
     private String site;
@@ -54,16 +54,10 @@ public class Restaurant {
     @OneToOne
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private Product product;
-
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
-    private List<Board> board;
-
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
 
-    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Consumption> consumptions;
 
 
 

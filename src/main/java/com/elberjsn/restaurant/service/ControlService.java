@@ -1,6 +1,8 @@
 package com.elberjsn.restaurant.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,5 +57,10 @@ public class ControlService {
         Control c = controlById(id);
         c.setStatus(StatusControl.CLOSED);
         controlRepository.save(c);
+    }
+
+    public Double balanceToday(LocalDate dt){
+        var c =controlRepository.findByDtClosedContaining(dt.atTime(LocalTime.MIN), dt.atTime(LocalTime.MAX));
+        return c.stream().mapToDouble(Control::getTotalValue).sum();
     }
 }
