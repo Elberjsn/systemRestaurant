@@ -1,10 +1,12 @@
 package com.elberjsn.restaurant.controller;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +30,6 @@ public class DashBoardController {
     List<?> clientsToday = new ArrayList<>();
     int boardDisposable = 0; // falta
     double balanceToday = 0;
-
     int reservesToday = 0;
     int clientToday = 0;
 
@@ -36,28 +37,73 @@ public class DashBoardController {
     RestaurantService restaurantService;
     @Autowired
     ReserveService reserveService;
+
     @Autowired
     ControlService controlService;
 
     @GetMapping("/")
     public String getMethodName(HttpSession httpSession, Model model) {
         String cnpj = (String) httpSession.getAttribute("key");
+        DateTimeFormatter formData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        if (cnpj == null) {
+            return "redirect:/login";
+        }
+
         initDash(cnpj);
+        httpSession.setAttribute("key", this.restaurant.getId());
 
         model.addAttribute("restaurant", this.restaurant);
         model.addAttribute("reservesToday", this.reservesToday);
         model.addAttribute("clientToday", this.clientToday);
         model.addAttribute("clientsToday", this.clientsToday);
         model.addAttribute("balanceToday", this.balanceToday);
+        model.addAttribute("today", LocalDate.now().format(formData));
 
         model.addAttribute("key", cnpj);
-    
+
         return "infos/dashboard";
     }
 
-    public void initDash(String cnpj) {
+    @GetMapping("/reserves")
+    public String reserves(Model model) {
+        model.addAttribute("restaurant", this.restaurant);
+
+        return "infos/reserves";
+    }
+
+    @GetMapping("/boards")
+    public String boards(Model model) {
+        model.addAttribute("restaurant", this.restaurant);
+
+        return "infos/boards";
+    }
+
+    @GetMapping("/employees")
+    public String emplooyes(Model model) {
+        model.addAttribute("restaurant", this.restaurant);
+
+        return "infos/reserves";
+    }
+
+    @GetMapping("/menu")
+    public String menu(Model model) {
+        model.addAttribute("restaurant", this.restaurant);
+
+        return "infos/menu";
+    }
+
+    @GetMapping("/config")
+    public String config(Model model) {
+        model.addAttribute("restaurant", this.restaurant);
+
+        return "infos/config";
+    }
+
+    private void initDash(String cnpj) {
         this.restaurant = restaurantService.restaurantByCnpj(cnpj);
-        Optional<Reserve> listReserve = reserveService.findReserveByDay(LocalDate.now());
+
+        Set<Reserve> listReserve = reserveService.findReserveByDay(LocalDate.now());
 
         this.reservesToday = (int) listReserve.stream().count();
 
@@ -65,9 +111,15 @@ public class DashBoardController {
 
         this.balanceToday = controlService.balanceToday(LocalDate.now());
 
-        this.clientsToday = listReserve
-                .map(reserve -> Arrays.asList(reserve.getClient().getName(), reserve.getQuantity()))
-                .orElse(Arrays.asList("0", 0));
+        this.clientsToday = listReserve.stream()
+                .map(reserve -> {
+                    if (reserve.getClient() != null && reserve.getClient().getName() != null) {
+                        return Arrays.asList(reserve.getClient().getName(), reserve.getQuantity());
+                    } else {
+                        return Arrays.asList("Cliente desconhecido", reserve.getQuantity());
+                    }
+                })
+                .collect(Collectors.toList());
 
     }
 }

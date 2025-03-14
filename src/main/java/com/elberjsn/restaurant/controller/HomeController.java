@@ -42,7 +42,8 @@ public class HomeController {
     @PostMapping("/restaurant/login")
     public String loginRestaurant(@ModelAttribute Restaurant rest, RedirectAttributes attributes,HttpSession httpSession) {
         var r =restaurantService.loginRestaurant(rest);
-        if (r.equals(rest.getCnpj())) {
+
+        if (r != null) {
             httpSession.setAttribute("key", r);
             return "redirect:/my/";
         } else {
@@ -61,10 +62,16 @@ public class HomeController {
             return "redirect:/login";
         }else{
             attributes.addFlashAttribute("msg", "Cadastro não Realizado\nRevize suas informações!");
-            return "redirect:/login";
+            return "redirect:/cadas";
         }
 
         
+
+    }
+    @GetMapping("/error")
+    public String menu(Model model) {
+
+        return "/error";
     }
 
 }
