@@ -60,7 +60,7 @@ public class ControlService {
     }
 
     public Double balanceToday(LocalDate dt){
-        var c =controlRepository.findByDtClosedContaining(dt.atTime(LocalTime.MIN), dt.atTime(LocalTime.MAX));
+        var c =controlRepository.findByDtClosedBetween(dt.atTime(LocalTime.MIN), dt.atTime(LocalTime.MAX));
         return c.stream().mapToDouble(Control::getTotalValue).sum();
     }
 }

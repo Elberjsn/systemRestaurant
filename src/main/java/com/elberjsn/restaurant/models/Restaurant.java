@@ -54,6 +54,11 @@ public class Restaurant {
     @OneToOne
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private Product product;
+
+    @OneToOne
+    @JoinColumn(name = "board_id",referencedColumnName = "id")
+    private Board board;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;

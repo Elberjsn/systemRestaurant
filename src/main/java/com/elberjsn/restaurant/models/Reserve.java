@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,15 +28,17 @@ public class Reserve {
     private int quantity;
     private String obs;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "board_id",referencedColumnName = "id")
-    private Board board;
+    
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_id",referencedColumnName = "id")
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "control_id",referencedColumnName = "id")
+    @JoinColumn(name = "control_id", referencedColumnName = "id")
     private Control control;
+
+    @ManyToOne
+    @JoinColumn(name = "board_id",referencedColumnName = "id")
+    private Board board;
 }

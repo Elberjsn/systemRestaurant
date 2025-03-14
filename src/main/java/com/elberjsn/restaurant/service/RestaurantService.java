@@ -2,6 +2,7 @@ package com.elberjsn.restaurant.service;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,9 +54,13 @@ public class RestaurantService {
     }
 
     public String loginRestaurant(Restaurant restaurant){
-        Restaurant login = restaurantRepository.findByCnpjAndPassword(restaurant.getCnpj(), restaurant.getPassword()).orElseThrow(()-> new EntityNotFoundException());
+        Optional<Restaurant> login = restaurantRepository.findByCnpjAndPassword(restaurant.getCnpj(), restaurant.getPassword());
+        if (login.isPresent()) {
+            return login.get().getCnpj();
+        }else{
+            return null;
+        }
         
-        return login.getCnpj();
     }
 
 }
