@@ -1,6 +1,6 @@
 package com.elberjsn.restaurant.service;
 
-import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,8 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.elberjsn.restaurant.models.Board;
 import com.elberjsn.restaurant.repository.BoardRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 
 @Service
@@ -22,8 +20,8 @@ public class BoardService {
     public Board saveBoard(Board board){
         return boardRepository.save(board);
     }
-    public List<Board> allBoards(Long idRestaurant){
-        return boardRepository.findByRestaurantId(idRestaurant).orElseThrow(()-> new EntityNotFoundException("Nenhuma MEsa Encontrada")).asList();
+    public Optional<Board> allBoards(Long idRestaurant){
+        return boardRepository.findByRestaurantId(idRestaurant);
     }
    
     @Transactional
