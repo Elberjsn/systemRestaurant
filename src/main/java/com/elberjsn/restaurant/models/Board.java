@@ -7,8 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,11 +23,16 @@ public class Board {
 
     private int number;
     private int capacity;
-    private String type;
 
     @OneToMany(mappedBy = "board",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Reserve> reserve;
 
-    @OneToOne(mappedBy = "board")
-    private Restaurant board;
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id",referencedColumnName = "id")
+    private Restaurant restaurant;
+
+    public List<Board> asList() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'asList'");
+    }
 }

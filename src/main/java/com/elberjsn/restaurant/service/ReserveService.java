@@ -19,8 +19,10 @@ public class ReserveService {
     @Autowired
     ReserveRepository reserveRepository;
 
-    RestaurantService restaurantService = new RestaurantService();
-    BoardService boardService = new BoardService();
+    @Autowired
+    RestaurantService restaurantService;
+    @Autowired
+    BoardService boardService;
 
     public Boolean verificHours(Reserve reserve, Long restaurant) {
 

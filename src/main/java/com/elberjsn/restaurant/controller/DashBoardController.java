@@ -32,6 +32,7 @@ public class DashBoardController {
     double balanceToday = 0;
     int reservesToday = 0;
     int clientToday = 0;
+    int boardsFreeToday = 0;
 
     @Autowired
     RestaurantService restaurantService;
@@ -58,7 +59,10 @@ public class DashBoardController {
         model.addAttribute("clientToday", this.clientToday);
         model.addAttribute("clientsToday", this.clientsToday);
         model.addAttribute("balanceToday", this.balanceToday);
+        model.addAttribute("boardsFreeToday", this.boardsFreeToday);
         model.addAttribute("today", LocalDate.now().format(formData));
+
+        
 
         model.addAttribute("key", cnpj);
 
@@ -110,6 +114,10 @@ public class DashBoardController {
         this.clientToday = listReserve.stream().mapToInt(Reserve::getQuantity).sum();
 
         this.balanceToday = controlService.balanceToday(LocalDate.now());
+
+        var r= reserveService.findBoardbyDate(LocalDate.now(), this.restaurant.getId());
+        this.boardsFreeToday = r.size();
+        System.out.println(r);
 
         this.clientsToday = listReserve.stream()
                 .map(reserve -> {

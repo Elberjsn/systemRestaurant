@@ -9,9 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.elberjsn.restaurant.models.Board;
 import com.elberjsn.restaurant.repository.BoardRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 
 @Service
 public class BoardService {
+
     @Autowired
     BoardRepository boardRepository;
 
@@ -20,12 +23,8 @@ public class BoardService {
         return boardRepository.save(board);
     }
     public List<Board> allBoards(Long idRestaurant){
-        return boardRepository.findAll();
+        return boardRepository.findByRestaurantId(idRestaurant).orElseThrow(()-> new EntityNotFoundException("Nenhuma MEsa Encontrada")).asList();
     }
-   
-
-   
-    
    
     @Transactional
     public void deleteBoard(Board board){

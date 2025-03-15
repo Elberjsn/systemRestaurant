@@ -55,9 +55,8 @@ public class Restaurant {
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private Product product;
 
-    @OneToOne
-    @JoinColumn(name = "board_id",referencedColumnName = "id")
-    private Board board;
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Board> board;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
