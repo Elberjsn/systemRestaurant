@@ -23,6 +23,7 @@ public class Board {
 
     private int number;
     private int capacity;
+    private String type;
 
     @OneToMany(mappedBy = "board",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Reserve> reserve;
@@ -31,8 +32,4 @@ public class Board {
     @JoinColumn(name = "restaurant_id",referencedColumnName = "id")
     private Restaurant restaurant;
 
-    public List<Board> asList() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'asList'");
-    }
 }

@@ -41,10 +41,10 @@ public class HomeController {
 
     @PostMapping("/restaurant/login")
     public String loginRestaurant(@ModelAttribute Restaurant rest, RedirectAttributes attributes,HttpSession httpSession) {
-        var r =restaurantService.loginRestaurant(rest);
-
+        String r = restaurantService.loginRestaurantReturnCNPJ(rest);
+        System.out.println(r);
         if (r != null) {
-            httpSession.setAttribute("key", r);
+            httpSession.setAttribute("key", r.toString());
             return "redirect:/my/";
         } else {
             attributes.addFlashAttribute("msg", "Informações de Login invalida!");

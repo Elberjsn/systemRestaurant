@@ -1,6 +1,7 @@
 package com.elberjsn.restaurant.models;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -22,16 +23,17 @@ public class Reserve {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime dtReserveStart;
-    private LocalDateTime dtReserveEnd;
+    private LocalDate dtReserve;
+    private LocalTime hoursStart;
+    private LocalTime hoursEnd;
     private String status;
     private int quantity;
     private String obs;
 
     
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "client_id",referencedColumnName = "id")
     private Client client;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -41,4 +43,8 @@ public class Reserve {
     @ManyToOne
     @JoinColumn(name = "board_id",referencedColumnName = "id")
     private Board board;
+
+    
+
+
 }

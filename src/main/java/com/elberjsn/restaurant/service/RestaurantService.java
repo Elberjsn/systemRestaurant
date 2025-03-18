@@ -26,10 +26,13 @@ public class RestaurantService {
         return restaurantRepository.findAll();
     }
     public Restaurant restaurantById(Long id){
-        return restaurantRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Não Encontrada"));
+        return restaurantRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Restaurante Não Encontrada"));
+    }
+    public Long restaurantByCnpjReturnLong(String cnpj){
+        return restaurantRepository.findByCnpj(cnpj).orElseThrow(()->new EntityNotFoundException("Cnpj Não Encontrada")).getId();
     }
     public Restaurant restaurantByCnpj(String cnpj){
-        return restaurantRepository.findByCnpj(cnpj).orElseThrow(()->new EntityNotFoundException("Não Encontrada"));
+        return restaurantRepository.findByCnpj(cnpj).orElseThrow(()->new EntityNotFoundException("Cnpj Não Encontrada"));
     }
     public List<LocalTime> openingHours(Long idRetaurant){
         var retaurant = restaurantById(idRetaurant);
@@ -53,7 +56,7 @@ public class RestaurantService {
 
     }
 
-    public String loginRestaurant(Restaurant restaurant){
+    public String loginRestaurantReturnCNPJ(Restaurant restaurant){
         Optional<Restaurant> login = restaurantRepository.findByCnpjAndPassword(restaurant.getCnpj(), restaurant.getPassword());
         if (login.isPresent()) {
             return login.get().getCnpj();

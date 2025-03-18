@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +106,7 @@ public class DashBoardController {
     private void initDash(String cnpj) {
         this.restaurant = restaurantService.restaurantByCnpj(cnpj);
 
-        Set<Reserve> listReserve = reserveService.findReserveByDay(LocalDate.now());
+        List<Reserve> listReserve = reserveService.findReserveByDay(LocalDate.now());
 
         this.reservesToday = (int) listReserve.stream().count();
 

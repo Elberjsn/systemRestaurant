@@ -13,6 +13,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
+<script>
+    function setMinDateISO(input) {
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+    
+      input.min = yesterday.toISOString().split('T')[0];
+    }
+    </script>
 <body class="bg-info">
 
     <header th:replace="~{fragments/header :: restaurant}">
@@ -26,8 +35,18 @@
             <div class="card-body">
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="dataEscolhida">Data </span>
-                    <input class="form-control" aria-describedby="dataEscolhida" type="date" id="dt" name="dt"
-                        hx-get="reserves/boards" hx-trigger="change" hx-target="#resultado" hx-include="#dataEscolhida">
+                    <input type="date" max="2030-01-01" onfocus="setMinDateISO(this)"
+                        class="form-control" aria-describedby="dataEscolhida" id="dt" name="dt"
+                        >
+
+
+
+                    <button class="btn">Consultar</button>
+
+                </div>
+                 <div class="input-group mb-3">
+                    <span class="input-group-text" id="dataEscolhida">Data </span>
+                    <input type="time" id="hours" name="hours" hx-get="reserves/boards" hx-trigger="blur" hx-target="#resultado" hx-include="#dt,#hours" >
 
 
                     <button class="btn">Consultar</button>
@@ -47,5 +66,7 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 </body>
+
+
 
 </html>
