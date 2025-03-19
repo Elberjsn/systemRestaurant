@@ -32,6 +32,7 @@ public class DashBoardController {
     int reservesToday = 0;
     int clientToday = 0;
     int boardsFreeToday = 0;
+    String cnpj = null;
 
     @Autowired
     RestaurantService restaurantService;
@@ -41,16 +42,21 @@ public class DashBoardController {
     @Autowired
     ControlService controlService;
 
+
+
     @GetMapping("/")
-    public String getMethodName(HttpSession httpSession, Model model) {
-        String cnpj = (String) httpSession.getAttribute("key");
+    public String initDashBoard(HttpSession httpSession, Model model) {
+       
         DateTimeFormatter formData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        if (cnpj == null) {
+        if ( httpSession.getAttribute("key").toString().isEmpty() || httpSession.getAttribute("key").toString().isEmpty() || httpSession.getAttribute("key").toString() == null) {
             return "redirect:/login";
+        }else{
+            cnpj = (String) httpSession.getAttribute("key").toString();
         }
 
         initDash(cnpj);
+
         httpSession.setAttribute("key", this.restaurant.getId());
 
         model.addAttribute("restaurant", this.restaurant);
@@ -63,7 +69,7 @@ public class DashBoardController {
 
         
 
-        model.addAttribute("key", cnpj);
+        
 
         return "infos/dashboard";
     }
@@ -83,10 +89,10 @@ public class DashBoardController {
     }
 
     @GetMapping("/employees")
-    public String emplooyes(Model model) {
+    public String employees(Model model) {
         model.addAttribute("restaurant", this.restaurant);
 
-        return "infos/reserves";
+        return "infos/employees";
     }
 
     @GetMapping("/menu")
@@ -105,6 +111,9 @@ public class DashBoardController {
 
     private void initDash(String cnpj) {
         this.restaurant = restaurantService.restaurantByCnpj(cnpj);
+        if (restaurant.getId()== null) {
+            
+        }
 
         List<Reserve> listReserve = reserveService.findReserveByDay(LocalDate.now());
 

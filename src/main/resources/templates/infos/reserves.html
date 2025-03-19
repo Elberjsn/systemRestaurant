@@ -15,49 +15,46 @@
 
 <script>
     function setMinDateISO(input) {
-      const today = new Date();
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-    
-      input.min = yesterday.toISOString().split('T')[0];
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+
+        input.min = yesterday.toISOString().split('T')[0];
     }
-    </script>
+</script>
+
 <body class="bg-info">
 
     <header th:replace="~{fragments/header :: restaurant}">
 
     </header>
 
-    <div class="container-fluid row justify-content-evenly">
+    <div class="container-fluid row justify-content-evenly mt-3">
 
         <div class="card" style="width: 28rem;">
             <h5 class="card-header">Nova Reserva</h5>
             <div class="card-body">
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="dataEscolhida">Data </span>
-                    <input type="date" max="2030-01-01" onfocus="setMinDateISO(this)"
-                        class="form-control" aria-describedby="dataEscolhida" id="dt" name="dt"
-                        >
-
-
-
-                    <button class="btn">Consultar</button>
-
+                    <input type="date" max="2030-01-01" onfocus="setMinDateISO(this)" class="form-control"
+                        aria-describedby="dataEscolhida" id="dt" name="dt">
                 </div>
-                 <div class="input-group mb-3">
-                    <span class="input-group-text" id="dataEscolhida">Data </span>
-                    <input type="time" id="hours" name="hours" hx-get="reserves/boards" hx-trigger="blur" hx-target="#resultado" hx-include="#dt,#hours" >
-
-
-                    <button class="btn">Consultar</button>
-
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="dataEscolhida">Hora </span>
+                    <input type="time" id="hours" name="hours">
+                    <button class="btn" hx-get="reserves/boards" hx-trigger="click" hx-target="#boards"
+                        hx-include="#dt,#hours">Consultar</button>
                 </div>
-
-                <div id="resultado"></div>
+                <div id="boards"></div>
 
                 <a href="#" class="btn btn-primary">Reservar</a>
+            </div>
+        </div>
 
-
+        <div class="card" style="width: 28rem;">
+            <h5 class="card-header">Reserva Por Dia</h5>
+            <div class="card-body">
+            <span class="display-2">Grafico</span>
             </div>
         </div>
     </div>

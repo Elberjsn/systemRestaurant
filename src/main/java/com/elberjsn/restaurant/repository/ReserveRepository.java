@@ -15,7 +15,8 @@ import com.elberjsn.restaurant.models.Reserve;
 @Repository
 public interface ReserveRepository extends JpaRepository<Reserve, Long> {
 
-    List<Reserve> findByDtReserve(LocalDate dtReserve);
+    //@Query("SELECT DISTINCT r FROM Reserve r LEFT JOIN FETCH r.board WHERE r.dtReserve = :dtReserve")
+    //List<Reserve> distinctByDtReserve(@Param("dtReserve") LocalDate dtReserve);
 
     @Query("SELECT b.number, r.hoursEnd FROM Reserve r JOIN r.board b "+
             "WHERE r.dtReserve = :dt AND r.hoursEnd BETWEEN :startOfDay AND :endOfDay")

@@ -11,13 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.elberjsn.restaurant.models.Reserve;
-import com.elberjsn.restaurant.repository.BoardRepository;
 import com.elberjsn.restaurant.repository.ReserveRepository;
 
 @Service
 public class ReserveService {
 
-    private final BoardRepository boardRepository;
 
     @Autowired
     ReserveRepository reserveRepository;
@@ -27,9 +25,7 @@ public class ReserveService {
     @Autowired
     BoardService boardService;
 
-    ReserveService(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
-    }
+   
 
     public Boolean verificHours(Reserve reserve, Long restaurant) {
 
@@ -49,13 +45,14 @@ public class ReserveService {
     }
 
     public List<Reserve> findReserveByDay(LocalDate dt) {
-
-        return reserveRepository.findByDtReserve(dt);
+        List<Reserve> l = new ArrayList<>();
+        return l;
     }
 
     public List<Integer> findBoardbyDate(LocalDate lc, Long restaurant) {
 
-        List<Reserve> boardsReserveds = reserveRepository.findByDtReserve(lc);
+        List<Reserve> boardsReserveds = findReserveByDay(lc);
+
         List<Integer> boardList = boardsReserveds.stream().map(br -> br.getBoard().getNumber())
                 .collect(Collectors.toList());
 

@@ -32,7 +32,7 @@ public class RestaurantService {
         return restaurantRepository.findByCnpj(cnpj).orElseThrow(()->new EntityNotFoundException("Cnpj Não Encontrada")).getId();
     }
     public Restaurant restaurantByCnpj(String cnpj){
-        return restaurantRepository.findByCnpj(cnpj).orElseThrow(()->new EntityNotFoundException("Cnpj Não Encontrada"));
+        return restaurantRepository.findByCnpj(cnpj).orElse(new Restaurant());
     }
     public List<LocalTime> openingHours(Long idRetaurant){
         var retaurant = restaurantById(idRetaurant);
