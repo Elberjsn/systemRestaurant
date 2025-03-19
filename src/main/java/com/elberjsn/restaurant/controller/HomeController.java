@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.elberjsn.restaurant.models.Restaurant;
+import com.elberjsn.restaurant.security.JwtUtil;
 import com.elberjsn.restaurant.service.RestaurantService;
 
 import jakarta.servlet.http.HttpSession;
@@ -44,7 +45,7 @@ public class HomeController {
         String r = restaurantService.loginRestaurantReturnCNPJ(rest);
         System.out.println(r);
         if (r != null) {
-            httpSession.setAttribute("key", r.toString());
+            JwtUtil.gerarToken(r);
             return "redirect:/my/";
         } else {
             attributes.addFlashAttribute("msg", "Informações de Login invalida!");

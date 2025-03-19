@@ -45,10 +45,10 @@ public class DashBoardController {
 
 
     @GetMapping("/")
-    public String initDashBoard(HttpSession httpSession, Model model) {
+    public  String initDashBoard(HttpSession httpSession, Model model) {
        
         DateTimeFormatter formData = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
+        
         if ( httpSession.getAttribute("key").toString().isEmpty() || httpSession.getAttribute("key").toString().isEmpty() || httpSession.getAttribute("key").toString() == null) {
             return "redirect:/login";
         }else{
