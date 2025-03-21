@@ -12,7 +12,7 @@ import com.elberjsn.restaurant.models.Restaurant;
 import com.elberjsn.restaurant.security.JwtUtil;
 import com.elberjsn.restaurant.service.RestaurantService;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class HomeController {
@@ -41,16 +41,22 @@ public class HomeController {
     }
 
     @PostMapping("/restaurant/login")
-    public String loginRestaurant(@ModelAttribute Restaurant rest, RedirectAttributes attributes,HttpSession httpSession) {
+    public String loginRestaurant(@ModelAttribute Restaurant rest, RedirectAttributes attributes,HttpServletResponse response) {
         String r = restaurantService.loginRestaurantReturnCNPJ(rest);
-        System.out.println(r);
+
         if (r != null) {
-            JwtUtil.gerarToken(r);
-            return "redirect:/my/";
+            String token = JwtUtil.gerarToken(r);
+            if (token != null) {
+                attributes.addFlashAttribute("Authorization", token);
+                response.setHeader("Authorization", token);
+                return "redirect:/my/?token="+token;
+            }
+           
         } else {
             attributes.addFlashAttribute("msg", "Informações de Login invalida!");
-            return "redirect:/login";
+           
         }
+        return "redirect:/login";
 
     }
 
@@ -71,7 +77,6 @@ public class HomeController {
     }
     @GetMapping("/error")
     public String menu(Model model) {
-
         return "/error";
     }
 

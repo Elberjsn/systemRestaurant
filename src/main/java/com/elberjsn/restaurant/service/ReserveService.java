@@ -22,6 +22,8 @@ public class ReserveService {
 
     @Autowired
     RestaurantService restaurantService;
+
+
     @Autowired
     BoardService boardService;
 
@@ -45,8 +47,8 @@ public class ReserveService {
     }
 
     public List<Reserve> findReserveByDay(LocalDate dt) {
-        List<Reserve> l = new ArrayList<>();
-        return l;
+       
+        return reserveRepository.findByDtReserve(dt);
     }
 
     public List<Integer> findBoardbyDate(LocalDate lc, Long restaurant) {

@@ -1,6 +1,6 @@
 package com.elberjsn.restaurant.models;
 
-import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -29,7 +29,7 @@ public class Board {
 
     @OneToMany(mappedBy = "board",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @OrderBy("id ASC")
-    private List<Reserve> reserve;
+    private Set<Reserve> reserve;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id",referencedColumnName = "id")

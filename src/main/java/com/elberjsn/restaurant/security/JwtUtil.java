@@ -12,6 +12,7 @@ public class JwtUtil {
 
     private static final String SECRET_KEY = "projetoRestaurant";
     private static final long EXPIRATION_TIME = 1000 * 60 * 360;
+
     public static String gerarToken(String cnpj) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         return JWT.create().withIssuer("restaurant")
@@ -31,7 +32,11 @@ public class JwtUtil {
             return null;
         }
     }
-    public static boolean isTokenExpirado(DecodedJWT decodedJWT) {
+    public static boolean isTokenExpirado(String token) {
+        Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = verifier.verify(token);
+
         Date expiration = decodedJWT.getExpiresAt();
         return expiration != null && expiration.before(new Date());
     }
