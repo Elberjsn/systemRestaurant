@@ -10,18 +10,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.elberjsn.restaurant.models.Restaurant;
 import com.elberjsn.restaurant.security.JwtUtil;
+import com.elberjsn.restaurant.service.BoardService;
 import com.elberjsn.restaurant.service.RestaurantService;
 
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class HomeController {
+    @Autowired
+    BoardService boardService;
 
     @Autowired
     RestaurantService restaurantService;
 
+   
+
     @GetMapping("/")
-    public String getMethodName(Model model) {
+    public String index(Model model) {
         model.addAttribute("page", "index");
         return "index";
     }
@@ -61,8 +66,21 @@ public class HomeController {
     }
 
     @PostMapping("/restaurant/save")
-    public String postMethodNames(@ModelAttribute Restaurant rest,RedirectAttributes attributes) {
+    public String newRestauran(@ModelAttribute Restaurant rest,RedirectAttributes attributes) {
         var r = restaurantService.save(rest);
+        if (r.getId() != null) {
+            System.out.println(r.toString());
+            attributes.addFlashAttribute("msg", "Cadastro Realizado com sucesso\nPor favor entre com suas credencias!");
+            return "redirect:/login";
+        }else{
+            attributes.addFlashAttribute("msg", "Cadastro não Realizado\nRevize suas informações!");
+            return "redirect:/cadas";
+        }
+
+    }
+    @PostMapping("/restaurant/edit")
+    public String editRestaurant(@ModelAttribute Restaurant rest,RedirectAttributes attributes) {
+        var r = restaurantService.editRestaurant(rest);
         if (r.getId() != null) {
             System.out.println(r.toString());
             attributes.addFlashAttribute("msg", "Cadastro Realizado com sucesso\nPor favor entre com suas credencias!");
@@ -75,6 +93,10 @@ public class HomeController {
         
 
     }
+
+
+   
+
     @GetMapping("/error")
     public String menu(Model model) {
         return "/error";

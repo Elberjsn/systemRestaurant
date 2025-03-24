@@ -23,48 +23,52 @@
 
         <div class="card m-2 col-5" style="width: 30rem;">
             <h5 class="card-header">Seu Restuarante</h5>
+            
             <div class="card-body">
+              <span class="text-info" th:if="${msg != null}" th:text="${msg}"></span>
+              <form th:action="@{/restaurant/edit}" th:object="${restaurant}" method="post">
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="nameEmployee">Nome </span>
-                    <input type="text" class="form-control" placeholder="Nome"  aria-describedby="nameEmployee">
+                    <input type="text" class="form-control" placeholder="Nome"  aria-describedby="nameEmployee" th:field="*{name}">
                   </div>
     
                   <div class="input-group mb-3">
                     <span class="input-group-text" id="address">Endereço</span>
-                    <input type="text" class="form-control" placeholder="Rua Rua" aria-label="Endereco" aria-describedby="salary">
+                    <input type="text" class="form-control" placeholder="Rua Rua" aria-label="Endereco" th:field="*{address}" >
                   </div>
     
                   <div class="input-group mb-3">
                     <span class="input-group-text" id="phone">Telefone</span>
-                    <input type="phone" class="form-control"  aria-label="phone" aria-describedby="phone">
+                    <input type="phone" class="form-control"  aria-label="phone" aria-describedby="phone" th:field="*{phone}" th:attr="value=${restaurant.phone}">
                   </div>
                   <div class="input-group mb-3">
                     <span class="input-group-text" id="email">Email</span>
-                    <input type="email" class="form-control" placeholder="seu@email.com" aria-label="email" aria-describedby="email">
+                    <input type="email" class="form-control" placeholder="seu@email.com" aria-label="email" aria-describedby="email" th:field="*{email}" th:attr="value=${restaurant.email}">
                   </div>
                   <div class="input-group mb-3">
                     <span class="input-group-text" id="open">Aberto</span>
-                    <input type="time" class="form-control"aria-label="Horario" aria-describedby="open">
+                    <input type="time" class="form-control"aria-label="Horario" aria-describedby="open" th:field="*{opening}">
                     <span class="input-group-text" id="close">Fechado</span>
-                    <input type="time" class="form-control"aria-label="Horario" aria-describedby="close">
+                    <input type="time" class="form-control"aria-label="Horario" aria-describedby="close" th:field="*{closed}">
                   </div>
                   <div class="input-group mb-3">
                     <span class="input-group-text" id="site">Site</span>
-                    <input type="text" class="form-control" aria-label="Site" placeholder="MeuSite.com" aria-describedby="site">
+                    <input type="text" class="form-control" aria-label="Site" placeholder="MeuSite.com" aria-describedby="site" th:field="*{site}">
                   </div>
                   <div class="input-group mb-3">
                     <span class="input-group-text" id="tipoK">Cozinha</span>
-                    <input type="text" class="form-control" aria-label="tipoK" placeholder="Italiana" aria-describedby="tipoK">
+                    <input type="text" class="form-control" aria-label="tipoK" placeholder="Italiana" aria-describedby="tipoK" th:field="*{typeKitchen}">
                   </div>
                   <div class="input-group mb-3">
                     <span class="input-group-text" id="pass">Senha</span>
-                    <input type="password" class="form-control" aria-label="Senha" placeholder="******" aria-describedby="pass">
+                    <input type="password" class="form-control" aria-label="Senha" placeholder="******" aria-describedby="pass" th:attr="value=${restaurant.password}">
                   </div>
                   
                   <div class="row justify-content-between m-1"> 
                     <button type="reset" class="btn  btn-secondary col-4">Limpar</button>
-                    <button type="button" class="btn btn-success col-4">Salvar</button>
+                    <button type="submit" class="btn btn-success col-4">Salvar</button>
                   </div>
+                </form>
             </div>
     
         </div>

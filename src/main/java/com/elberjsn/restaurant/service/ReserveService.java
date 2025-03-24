@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.elberjsn.restaurant.DTO.ReserveDTO;
 import com.elberjsn.restaurant.models.Reserve;
 import com.elberjsn.restaurant.repository.ReserveRepository;
 
@@ -45,9 +46,16 @@ public class ReserveService {
             return null;
         }
     }
+    public Reserve findById(Long id){
+        return reserveRepository.findById(id).orElse(null);
+    }
+
+    public Reserve convertToEntity(ReserveDTO dto) {
+        return new Reserve(dto.getReserveId(), dto.getDtReserve(), dto.getHrStart(), null, null, 0, null, null, null,null);
+    }
 
     public List<Reserve> findReserveByDay(LocalDate dt) {
-       
+
         return reserveRepository.findByDtReserve(dt);
     }
 

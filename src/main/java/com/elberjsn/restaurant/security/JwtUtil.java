@@ -32,6 +32,7 @@ public class JwtUtil {
             return null;
         }
     }
+
     public static boolean isTokenExpirado(String token) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
         JWTVerifier verifier = JWT.require(algorithm).build();
@@ -39,6 +40,19 @@ public class JwtUtil {
 
         Date expiration = decodedJWT.getExpiresAt();
         return expiration != null && expiration.before(new Date());
+    }
+
+    public static String decoderToken(String token){
+
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT decodedJWT = verifier.verify(token);
+
+           return decodedJWT.getSubject();
+        } catch (Exception e) {
+            return e.getMessage();
+        } 
     }
 
      
