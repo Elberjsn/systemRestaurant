@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.elberjsn.restaurant.DTO.ReserveDTO;
 import com.elberjsn.restaurant.models.Reserve;
 import com.elberjsn.restaurant.repository.ReserveRepository;
 
@@ -50,53 +49,54 @@ public class ReserveService {
         return reserveRepository.findById(id).orElse(null);
     }
 
-    public Reserve convertToEntity(ReserveDTO dto) {
-        return new Reserve(dto.getReserveId(), dto.getDtReserve(), dto.getHrStart(), null, null, 0, null, null, null,null);
+
+    public List<Reserve> findReserveByDayandHours(LocalDate dt,LocalTime start,LocalTime end,Long restaurant) {
+       
+        if (end == null) {
+            end = start.plusHours(2);
+        }
+        if (!start.equals(LocalTime.MAX)) {
+            start = start.minusMinutes(30);
+        }
+
+        return reserveRepository.findReservations(dt,start,end,restaurant);
     }
 
-    public List<Reserve> findReserveByDay(LocalDate dt) {
 
-        return reserveRepository.findByDtReserve(dt);
-    }
-
-    public List<Integer> findBoardbyDate(LocalDate lc, Long restaurant) {
-
-        List<Reserve> boardsReserveds = findReserveByDay(lc);
-
-        List<Integer> boardList = boardsReserveds.stream().map(br -> br.getBoard().getNumber())
-                .collect(Collectors.toList());
-
-        List<Integer> allBoards = boardService.allBoards(restaurant).stream()
-                .map(r -> r.getNumber()).collect(Collectors.toList());
-
-        return allBoards.stream().filter(b -> !boardList.contains(b)).toList();
-
-    }
-
-    public List<Integer> findBoardbyDateForReserve(LocalDate lc, Long restaurant, LocalTime start) {
+    public List<Integer> findBoardbyDateForReserve(LocalDate dateLocal, Long restaurant, LocalTime start) {
 
         var playReserve = start.minusMinutes(30);
         var endReserve = start.plusHours(2);
-        List<Object[]> boardsReserveds = reserveRepository.reservesAndHoursEnd(lc, playReserve, endReserve);
+        System.out.println("restaurant= "+restaurant);
 
-        List<Integer> allBoards = boardService.allBoards(restaurant).stream()
-                .map(r -> r.getNumber()).collect(Collectors.toList());
+        restaurant = (long) 1;
+        System.out.println("r== "+restaurant);
 
-        if (boardsReserveds.size() > 0) {
+        List<Reserve> boardsReserveds = findReserveByDayandHours(dateLocal,playReserve,endReserve, restaurant);
+
+        System.out.println("mesas"+boardsReserveds.size());
+        
+        List<Integer> numBorads = boardsReserveds.stream().map(b->b.getBoard().getNumber()).toList();
+
+        var allBoards = boardService.allBoards(restaurant);
+
+
+        System.out.println(allBoards.toString());
+
+        List<Integer> allBoard = allBoards.stream().map(r -> r.getNumber()).collect(Collectors.toList());
+
+        System.out.println("mesas"+numBorads.size());
+
+        if (numBorads.size() > 0) {
             ArrayList<Integer> freeBoards = new ArrayList<>();
-            for (Object[] b : boardsReserveds) {
-                LocalTime time = (LocalTime) b[1]; // hora final da reserva
-                Integer board = (Integer) b[0];
-
-                if (allBoards.contains(board) && time.isAfter(start)) {
-                    freeBoards.add(board);
+            for (Integer b : numBorads) {
+                if (!allBoard.contains(b)) {
+                    freeBoards.add(b);
                 }
-
             }
-
             return freeBoards;
         } else {
-            return allBoards;
+            return allBoard;
         }
 
     }

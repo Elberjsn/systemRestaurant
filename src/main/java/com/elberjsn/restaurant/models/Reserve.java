@@ -47,6 +47,9 @@ public class Reserve {
     @JoinColumn(name = "board_id",referencedColumnName = "id")
     private Board board;
 
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id",referencedColumnName = "id")
+    private Restaurant restaurant;
     
 
 

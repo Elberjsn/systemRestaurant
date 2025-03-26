@@ -17,7 +17,6 @@ import com.elberjsn.restaurant.service.RestaurantService;
 
 import jakarta.servlet.http.HttpSession;
 
-
 @Controller
 @RestController
 public class utilsController {
@@ -31,32 +30,27 @@ public class utilsController {
     @Autowired
     BoardService boardService;
 
-
     @GetMapping("my/reserves/boards")
-    public String data(@RequestParam String dt,@RequestParam String hours, HttpSession httpSession,Model model) {
+    public String data(@RequestParam String dt, @RequestParam String hours, HttpSession httpSession, Model model) {
 
         LocalDate lc = LocalDate.parse(dt);
         LocalTime h = LocalTime.parse(hours);
 
         var cnpj = JwtUtil.decoderToken((String) httpSession.getAttribute("token"));
-        System.out.println(cnpj);
-        var id = restaurantService.restaurantByCnpjReturnLong(cnpj.toString());
+        Long id = restaurantService.restaurantByCnpjReturnLong(cnpj);
+        System.out.println(id);
+        var board = reserveService.findBoardbyDateForReserve(lc,id, h);
 
-        
-        var board = reserveService.findBoardbyDateForReserve(lc, id , h);
-        model.addAttribute("boards", board);
         String boads = null;
-            for (Integer integer : board) {
-                boads += "<button value="+integer+">"+integer+"</button>";
-            }
+        for (Integer integer : board) {
+            boads += "<button value=" + integer + ">" + integer + "</button>";
+        }
+        model.addAttribute("boards", boads);
         return boads;
 
     }
 
-    
-    
-
-    public String redirectPages(Model model,String link){
+    public String redirectPages(Model model, String link) {
         return link;
     }
 

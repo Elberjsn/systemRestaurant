@@ -1,6 +1,7 @@
 package com.elberjsn.restaurant.controller;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -202,7 +203,7 @@ public class DashBoardController {
         this.restaurant = restaurantService.restaurantByCnpj(cnpj);
         idRestaurant = restaurant.getId();
         
-        List<Reserve> listReserve = reserveService.findReserveByDay(LocalDate.now());
+        List<Reserve> listReserve = reserveService.findReserveByDayandHours(LocalDate.now(), LocalTime.MIN, LocalTime.MAX, idRestaurant);
 
         this.reservesToday = (int) listReserve.stream().count();
 
@@ -210,17 +211,17 @@ public class DashBoardController {
 
         this.balanceToday = controlService.balanceToday(LocalDate.now());
 
-        var r = reserveService.findBoardbyDate(LocalDate.now(), this.restaurant.getId());
-
+       
+        
         for (Board board : boardService.allBoards(idRestaurant)) {
             allBoardEntity.add(new BoardDTO(board.getNumber(), board.getCapacity()));
         }
         this.allBoards = allBoardEntity.size();
 
-        if (r.size()==0) {
+        if (listReserve.size()==0) {
             this.boardsFreeToday =allBoards;
         }else{
-            this.boardsFreeToday =allBoards-r.size();
+            this.boardsFreeToday =allBoards-listReserve.size();
         }
         
 

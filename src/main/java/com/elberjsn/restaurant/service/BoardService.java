@@ -1,7 +1,6 @@
 package com.elberjsn.restaurant.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,7 @@ public class BoardService {
         return boardRepository.save(board);
     }
     public List<Board> allBoards(Long idRestaurant){
-        return boardRepository.findByRestaurantId(idRestaurant).stream().collect(Collectors.toList());
+        return boardRepository.findByRestaurantId(idRestaurant);
     }
    
     @Transactional
