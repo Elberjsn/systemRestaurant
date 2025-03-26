@@ -8,12 +8,45 @@
     <title>Painel - Gerenciador de Restaurante</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
-    
-</head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<body >
+</head>
+<script>
+
+    function criarGrafico(dados) {
+        var dias = []
+        var valores = []
+        const ctx = document.getElementById('reservasChart').getContext('2d');
+         dados = JSON.parse(dados)
+            for (let key in dados) {
+               valores.push(dados[key]);
+               dias.push(key);
+              }
+        const meuGrafico = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dias,
+                datasets: [{
+                    data: valores,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+<body>
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -42,35 +75,48 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="card text-white bg-primary mb-3">
-                    <div class="card-body" hx-post="/my/reserve/active" hx-target="#reserves" hx-trigger="load delay:500ms">
+                    <div class="card-body" hx-post="/my/reserve/active" hx-target="#reserves"
+                        hx-trigger="load delay:500ms">
                         <h5 class="card-title">Reservas Ativas</h5>
-                        <p class="card-text fs-3" id="reserves">24</p>
+                        <p class="card-text fs-3" id="reserves">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card text-white bg-success mb-3">
-                    <div class="card-body" hx-post="/my/board/disposables" hx-target="#boards" hx-trigger="load delay:500ms">
+                    <div class="card-body" hx-post="/my/board/disposables" hx-target="#boards"
+                        hx-trigger="load delay:500ms">
                         <h5 class="card-title">Mesas Disponíveis</h5>
-                        <p class="card-text fs-3" id="boards">8</p>
+                        <p class="card-text fs-3" id="boards">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card text-white bg-warning mb-3">
-                    <div class="card-body" hx-post="/my/employee/online" hx-target="#employee" hx-trigger="load delay:500ms"></div>>
+                    <div class="card-body" hx-post="/my/employee/online" hx-target="#employee"
+                        hx-trigger="load delay:1s">
                         <h5 class="card-title">Funcionários Presentes</h5>
-                        <p class="card-text fs-3" id="employee">12</p>
+                        <p class="card-text fs-3" id="employee">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </p>
                     </div>
                 </div>
             </div>
-            
+
         </div>
 
         <!-- Gráfico de Reservas -->
         <div class="card p-3 mb-4">
             <h5 class="card-title">Reservas da Semana</h5>
-            <canvas id="reservasChart"></canvas>
+
+            <canvas id="reservasChart" hx-get="/my/reserve/weekChart" hx-trigger="load delay:500ms"
+                hx-on::after-request="criarGrafico(event.detail.xhr.responseText)"
+
+            ></canvas>
         </div>
 
         <!-- Últimos Pedidos -->

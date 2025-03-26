@@ -21,6 +21,8 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
 
     
     List<Reserve> findByDtReserveAndRestaurantId(LocalDate dtReserve,Long id);
+
+    List<Reserve> findByDtReserveBetweenAndRestaurantId(LocalDate start,LocalDate end,Long id);
     
 
     

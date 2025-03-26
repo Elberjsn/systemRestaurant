@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
-@RequestMapping("/my/board")
+@RequestMapping("/my/orders")
 public class OrdersController {
-    @PostMapping("/disposables")
+    @PostMapping("/status")
     public String postMethodName(@RequestBody String entity) {
         //TODO: process POST request
         

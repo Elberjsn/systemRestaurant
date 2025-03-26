@@ -22,7 +22,7 @@ public class BoardsController {
     BoardService boardService ;
 
     @PostMapping("/disposables")
-   public ResponseEntity<Integer> reservesActiveToday(HttpServletRequest request) {
+   public ResponseEntity<Integer> boardsActiveToday(HttpServletRequest request) {
         LocalDate today = LocalDate.now();
         HttpSession session = request.getSession(false);
         

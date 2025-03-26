@@ -59,7 +59,7 @@ public class HomeController {
                 Cookie cookie = new Cookie("Authorization", token);
                 cookie.setMaxAge(1000 * 60 * 360);
 
-                HttpSession session = request.getSession(false);
+                HttpSession session = request.getSession();
                 session.setAttribute("utilizadorId", r.getId());
 
                 return "redirect:/my/";

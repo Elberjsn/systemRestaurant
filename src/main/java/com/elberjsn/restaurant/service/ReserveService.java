@@ -20,11 +20,6 @@ public class ReserveService {
 
     @Autowired
     RestaurantService restaurantService;
-
-
-    @Autowired
-    BoardService boardService;
-
    
 
     public Boolean verificHours(Reserve reserve, Long restaurant) {
@@ -49,6 +44,14 @@ public class ReserveService {
 
     public List<Reserve> findByReservesToday(LocalDate today,Long id){
         return reserveRepository.findByDtReserveAndRestaurantId(today,id);
+    }
+
+    public List<Reserve> reserveWeek(LocalDate data,Long id){
+        LocalDate start = data;
+        LocalDate end = start.plusDays(7);
+        return reserveRepository.findByDtReserveBetweenAndRestaurantId(start, end, id);
+
+
     }
 
 
