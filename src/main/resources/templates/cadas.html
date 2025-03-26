@@ -9,27 +9,31 @@
 
     
 </head>
+
+<script>
+
+</script>
 <body>
 
     <div class="container">
         <div class="register-container">
             <h3 class="text-center text-primary">Crie sua Conta</h3>
-            <form>
+            <form method="post" th:action="@{/restaurant/save}" th:object="${rest}" id="form">
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Nome Do Estabelecimento</label>
-                    <input type="text" class="form-control" id="fullName" placeholder="Digite seu nome completo" required>
+                    <input type="text" class="form-control" id="fullName" th:field="*{name}" placeholder="Digite seu Nome" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">CNPJ</label>
-                    <input type="text" class="form-control" id="cnpj"pattern="\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}" title="Insira o CNPJ" required>
+                    <input type="text" class="form-control" th:field="*{cnpj}" id="cnpj"pattern="\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}" title="Insira o CNPJ" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">E-mail</label>
-                    <input type="email" class="form-control" id="email" placeholder="Digite seu e-mail" required>
+                    <input type="email" class="form-control" th:field="*{email}" id="email" placeholder="Digite seu e-mail" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Senha</label>
-                    <input type="password" class="form-control" id="password" placeholder="Digite sua senha" required>
+                    <input type="password" class="form-control" th:field="*{password}" id="password" placeholder="Digite sua senha" required>
                 </div>
                 <div class="mb-3">
                     <label for="confirmPassword" class="form-label">Confirme sua Senha</label>

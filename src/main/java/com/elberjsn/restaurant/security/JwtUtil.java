@@ -21,15 +21,15 @@ public class JwtUtil {
                 .sign(algorithm);
     }
 
-    public static String validarToken(String token){
+    public static boolean validarToken(String token){
         try{
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             JWTVerifier verifier = JWT.require(algorithm)
                 .withIssuer("restaurant")
                 .build();
-            return verifier.verify(token).getSubject();
+            return !verifier.verify(token).getSubject().isEmpty();
         }catch(JWTVerificationException exception){
-            return null;
+            return false;
         }
     }
 

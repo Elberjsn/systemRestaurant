@@ -20,6 +20,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
     List<Object[]> reservesAndHoursEnd(@Param("dt") LocalDate dt ,@Param("startOfDay") LocalTime start,@Param("endOfDay") LocalTime end );
 
     
+    List<Reserve> findByDtReserveAndRestaurantId(LocalDate dtReserve,Long id);
     
 
     

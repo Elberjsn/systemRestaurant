@@ -13,7 +13,10 @@ import com.elberjsn.restaurant.security.JwtUtil;
 import com.elberjsn.restaurant.service.BoardService;
 import com.elberjsn.restaurant.service.RestaurantService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
@@ -46,15 +49,20 @@ public class HomeController {
     }
 
     @PostMapping("/restaurant/login")
-    public String loginRestaurant(@ModelAttribute Restaurant rest, RedirectAttributes attributes,HttpServletResponse response) {
-        String r = restaurantService.loginRestaurantReturnCNPJ(rest);
+    public String loginRestaurant(@ModelAttribute Restaurant rest, RedirectAttributes attributes,HttpServletResponse response,HttpServletRequest request) {
+        Restaurant r = restaurantService.loginRestaurant(rest);
 
         if (r != null) {
-            String token = JwtUtil.gerarToken(r);
+            String token = JwtUtil.gerarToken(r.getCnpj());
             if (token != null) {
-                attributes.addFlashAttribute("Authorization", token);
-                response.setHeader("Authorization", token);
-                return "redirect:/my/?token="+token;
+
+                Cookie cookie = new Cookie("Authorization", token);
+                cookie.setMaxAge(1000 * 60 * 360);
+
+                HttpSession session = request.getSession(false);
+                session.setAttribute("utilizadorId", r.getId());
+
+                return "redirect:/my/";
             }
            
         } else {

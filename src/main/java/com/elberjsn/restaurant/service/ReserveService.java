@@ -1,5 +1,6 @@
 package com.elberjsn.restaurant.service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -44,6 +45,10 @@ public class ReserveService {
     }
     public Reserve findById(Long id){
         return reserveRepository.findById(id).orElse(null);
+    }
+
+    public List<Reserve> findByReservesToday(LocalDate today,Long id){
+        return reserveRepository.findByDtReserveAndRestaurantId(today,id);
     }
 
 

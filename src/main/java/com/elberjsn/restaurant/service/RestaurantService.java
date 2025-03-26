@@ -54,10 +54,10 @@ public class RestaurantService {
 
     }
 
-    public String loginRestaurantReturnCNPJ(Restaurant restaurant){
+    public Restaurant loginRestaurant(Restaurant restaurant){
         Optional<Restaurant> login = restaurantRepository.findByCnpjAndPassword(restaurant.getCnpj(), restaurant.getPassword());
         if (login.isPresent()) {
-            return login.get().getCnpj();
+            return login.get();
         }else{
             return null;
         }

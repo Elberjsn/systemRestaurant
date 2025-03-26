@@ -34,6 +34,7 @@ public class Employee {
     private String position;
     private LocalDate dtAdmission;
     private Double salary;
+    private Boolean online;
 
     @ManyToOne
     @JoinColumn(name ="restaurant_id")
