@@ -80,7 +80,7 @@ public class HomeController {
     }
     @PostMapping("/restaurant/edit")
     public String editRestaurant(@ModelAttribute Restaurant rest,RedirectAttributes attributes) {
-        var r = restaurantService.editRestaurant(rest);
+        var r = restaurantService.editRestaurantAll(rest);
         if (r.getId() != null) {
             System.out.println(r.toString());
             attributes.addFlashAttribute("msg", "Cadastro Realizado com sucesso\nPor favor entre com suas credencias!");

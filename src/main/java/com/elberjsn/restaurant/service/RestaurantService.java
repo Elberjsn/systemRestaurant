@@ -39,15 +39,13 @@ public class RestaurantService {
         return List.of(retaurant.getOpening(),retaurant.getClosed());
     }
     
-    public Restaurant editRestaurant(Restaurant r){
+    public Restaurant editRestaurantAll(Restaurant r){
         var newRestaurant = restaurantByCnpj(r.getCnpj());
         newRestaurant.setAddress(r.getAddress());
-        newRestaurant.setCnpj(r.getCnpj());
         newRestaurant.setEmail(r.getEmail());
         newRestaurant.setName(r.getName());
         newRestaurant.setOpening(r.getOpening());
         newRestaurant.setClosed(r.getClosed());
-        newRestaurant.setPassword(r.getPassword());
         newRestaurant.setPhone(r.getPhone());
         newRestaurant.setSite(r.getSite());
         newRestaurant.setTypeKitchen(r.getTypeKitchen());

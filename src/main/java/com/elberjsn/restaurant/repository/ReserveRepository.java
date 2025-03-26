@@ -19,13 +19,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Long> {
             "WHERE r.dtReserve = :dt AND r.hoursEnd BETWEEN :startOfDay AND :endOfDay")
     List<Object[]> reservesAndHoursEnd(@Param("dt") LocalDate dt ,@Param("startOfDay") LocalTime start,@Param("endOfDay") LocalTime end );
 
-    @Query("SELECT r FROM Reserve r WHERE r.dtReserve = :dtReserve AND r.hoursStart BETWEEN :start AND :end AND r.restaurant_id = :restaurantId")
-    List<Reserve> findReservations(
-        @Param("dtReserve") LocalDate dtReserve, 
-        @Param("start") LocalTime start, 
-        @Param("end") LocalTime end, 
-        @Param("restaurantId") Long restaurantId);
-
+    
     
 
     
