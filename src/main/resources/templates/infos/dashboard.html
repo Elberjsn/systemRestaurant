@@ -14,21 +14,53 @@
 
 </head>
 <script>
+    
+    function addClient(){
+    }
+    function btnsBoads(dados) {
 
+        dados = JSON.parse(dados)
+        var mesas = document.getElementById("mesas");
+        var select = document.createElement('select')
+        select.id="selectBtn"
+        select.addEventListener("change",addClient())
+
+        var opt1 = document.createElement('option')
+        opt1.innerHTML="Mesa | Quantidade"
+        opt1.disabled=true
+        opt1.selected=true
+        select.appendChild(opt1)
+        select.className="form-select"
+        for (let key in dados) {
+
+            var opt = document.createElement('option')
+
+            opt.value = key
+
+            opt.innerHTML = key + " | " + dados[key]
+
+            select.appendChild(opt)
+
+        }
+        mesas.appendChild(select)
+
+    }
     function criarGrafico(dados) {
         var dias = []
         var valores = []
         const ctx = document.getElementById('reservasChart').getContext('2d');
-         dados = JSON.parse(dados)
-            for (let key in dados) {
-               valores.push(dados[key]);
-               dias.push(key);
-              }
+        dados = JSON.parse(dados)
+        for (let key in dados) {
+            valores.push(dados[key]);
+            dias.push(key);
+        }
         const meuGrafico = new Chart(ctx, {
             type: 'bar',
             data: {
+
                 labels: dias,
                 datasets: [{
+                    label: 'Reservas da Semana',
                     data: valores,
                     backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderColor: 'rgba(54, 162, 235, 1)',
@@ -65,8 +97,12 @@
 
         <!-- Botões de Ação -->
         <div class="d-flex justify-content-end mb-3">
-            <button class="btn btn-primary me-2">+ Nova Reserva</button>
-            <button class="btn btn-success me-2">+ Nova Mesa</button>
+            <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
+                data-bs-target="#newReserveModel">+ Nova Reserva</button>
+            <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#newBoardModal">+ Nova
+                Mesa</button>
+
+
             <button class="btn btn-warning me-2">+ Novo Funcionário</button>
             <button class="btn btn-danger">+ Novo Pedido</button>
         </div>
@@ -110,13 +146,11 @@
         </div>
 
         <!-- Gráfico de Reservas -->
-        <div class="card p-3 mb-4">
+        <div class="card p-3 mb-4 h-50">
             <h5 class="card-title">Reservas da Semana</h5>
 
             <canvas id="reservasChart" hx-get="/my/reserve/weekChart" hx-trigger="load delay:500ms"
-                hx-on::after-request="criarGrafico(event.detail.xhr.responseText)"
-
-            ></canvas>
+                hx-on::after-request="criarGrafico(event.detail.xhr.responseText)"></canvas>
         </div>
 
         <!-- Últimos Pedidos -->
@@ -142,4 +176,116 @@
             </table>
         </div>
     </div>
+
+    <!-- Reserva -->
+    <div class="modal fade" id="newReserveModel" tabindex="-1" aria-labelledby="newReserveModelLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newReserveModelLabel">Nova Reserva</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="mb-3 col-5">
+                            <label class="form-label" for="dateNewReserve">Data: </label>
+                            <input class="form-control" type="date" id="dateNewReserve" name="dateNewReserve">
+                        </div>
+                        <div class=" mb-3 col-5">
+                            <label class="form-label" for="timeNewReserve">Hora: </label>
+                            <input class="form-control col-5" type="time" id="timeNewReserve" name="timeNewReserve">
+                        </div>
+
+                    </div>
+                    <button type="button" class="btn btn-secondary" hx-post="/my/reserve/availableBoadsByDate"
+                    hx-swap="none" hx-trigger="click delay:500ms"
+                        hx-on::after-request="btnsBoads(event.detail.xhr.responseText)"
+                        hx-include="#dateNewReserve,#timeNewReserve">Verificar Mesas</button>
+
+                    <div id="mesas">
+                        
+
+                    </div>
+
+                    <div id="reserveClient">
+                        <form>
+                            <div class="mb-3">
+                              <label for="exampleInputEmail1" class="form-label">Email address</label>
+                              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                              <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                            </div>
+                            <div class="mb-3">
+                              <label for="exampleInputPassword1" class="form-label">Password</label>
+                              <input type="password" class="form-control" id="exampleInputPassword1">
+                            </div>
+                            <div class="mb-3 form-check">
+                              <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                              <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                          </form>
+
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Reserva fim -->
+
+    <!-- Mesa -->
+    <div class="modal fade" id="newBoardModal" tabindex="-1" aria-labelledby="newBoardModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newReserveModelLabel">Nova Mesa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="mb-3 col-5">
+                            <label class="form-label" for="numNewBoard">Numero de Identificação: </label>
+                            <input class="form-control" type="number" id="numNewBoard" name="numNewBoard">
+                        </div>
+                        <div class=" mb-3 col-5">
+                            <label class="form-label" for="qtdNewBoard">Lugares: </label>
+                            <input class="form-control col-5" type="number" id="qtdNewBoard" name="qtdNewBoard">
+                        </div>
+
+                    </div>
+                    <button type="button" class="btn btn-secondary" hx-post="/my/board/save" hx-target="#newBoard"
+                        hx-trigger="click delay:500ms" hx-include="#numNewBoard,#qtdNewBoard">Salvar Mesas</button>
+
+                    <div id="newBoard">
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mesa Fim -->
+
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    dataToday = new Date();
+    dataToday.setDate(dataToday.getDate()-1);
+    dateNewReserve.min = dataToday.toISOString().split("T")[0];
+</script>
+
+</html>

@@ -27,6 +27,7 @@ public class BoardService {
     }
 
     public List<Board> allBoards(Long idRestaurant) {
+
         return boardRepository.findByRestaurantId(idRestaurant);
     }
 
@@ -36,18 +37,20 @@ public class BoardService {
         saveBoard(deleteBoard);
     }
 
-    public List<Board> boardsDisposable(Long idRestaurant,LocalDate today) {
+    public List<Board> boardsDisposable(Long idRestaurant, LocalDate today) {
         List<Reserve> reserves = reserveService.findByReservesToday(today, idRestaurant);
 
         List<Integer> numberBoardInReserves = reserves.stream()
                 .map(b -> b.getBoard().getNumber())
                 .collect(Collectors.toList());
+        System.out.println("startProblem");
+        var allBoardsRestaurant = allBoards(idRestaurant);
+        System.out.println("endProblem");
 
-        List<Board> boardsNotReserveds = allBoards(idRestaurant).stream()
+        List<Board> boardsNotReserveds = allBoardsRestaurant.stream()
                 .filter(board -> !numberBoardInReserves.contains(board.getNumber()))
                 .collect(Collectors.toList());
 
         return boardsNotReserveds;
-
     }
 }

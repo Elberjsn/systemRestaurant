@@ -5,6 +5,7 @@ import java.time.LocalTime;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,19 +36,19 @@ public class Reserve {
 
     
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id",referencedColumnName = "id")
     private Client client;
 
-    @OneToOne(cascade = CascadeType.DETACH)
+    @OneToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
     @JoinColumn(name = "control_id", referencedColumnName = "id")
     private Control control;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id",referencedColumnName = "id")
     private Board board;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id",referencedColumnName = "id")
     private Restaurant restaurant;
     

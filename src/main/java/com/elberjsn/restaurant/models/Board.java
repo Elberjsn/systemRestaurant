@@ -31,7 +31,7 @@ public class Board {
     @OrderBy("id ASC")
     private Set<Reserve> reserve;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id",referencedColumnName = "id")
     private Restaurant restaurant;
 

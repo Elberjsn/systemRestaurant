@@ -2,6 +2,7 @@ package com.elberjsn.restaurant.models;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,11 +29,11 @@ public class Consumption {
     private Double valueUnit;
     private Double valueTotal;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private Product item;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="control_id")
     private Control control;
 

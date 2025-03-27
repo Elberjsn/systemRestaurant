@@ -26,7 +26,7 @@ public class Client {
     private String phone;
     private String email;
 
-    @OneToOne(mappedBy = "client")
+    @OneToOne(mappedBy = "client",fetch = FetchType.LAZY)
     private Reserve reserve;
 
     @OneToMany(mappedBy = "client",cascade = CascadeType.ALL,fetch = FetchType.LAZY)

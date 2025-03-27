@@ -7,6 +7,7 @@ import com.elberjsn.restaurant.models.utils.StatusControl;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,10 +32,10 @@ public class Control {
     private Double totalValue;
     private String paymentMethod;
 
-    @OneToOne(mappedBy = "control")
+    @OneToOne(mappedBy = "control",fetch = FetchType.LAZY)
     private Reserve reserve;
 
-    @OneToMany(mappedBy = "control",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "control",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Consumption> consumptions;
 
 }

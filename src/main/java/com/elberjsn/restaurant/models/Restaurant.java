@@ -49,17 +49,17 @@ public class Restaurant {
 
    
 
-    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Employee> employee;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private Product product;
 
-    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Board> board;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
 

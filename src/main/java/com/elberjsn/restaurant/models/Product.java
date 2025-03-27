@@ -1,6 +1,7 @@
 package com.elberjsn.restaurant.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,10 +21,10 @@ public class Product {
     private String category;
     private Double price;
 
-    @OneToOne(mappedBy = "item")
+    @OneToOne(mappedBy = "item",fetch = FetchType.LAZY)
     private Consumption item;
 
-    @OneToOne(mappedBy = "product")
+    @OneToOne(mappedBy = "product",fetch = FetchType.LAZY)
     private Restaurant restaurant;
 
     
