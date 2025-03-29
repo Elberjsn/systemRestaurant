@@ -1,7 +1,10 @@
 package com.elberjsn.restaurant.models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -22,9 +25,12 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
-public class Reserve {
+public class Reserve implements Serializable{
+    
+    private static final long serialVersionUID = 1L;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private LocalDate dtReserve;
@@ -40,6 +46,7 @@ public class Reserve {
     @JoinColumn(name = "client_id",referencedColumnName = "id")
     private Client client;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.DETACH,fetch = FetchType.LAZY)
     @JoinColumn(name = "control_id", referencedColumnName = "id")
     private Control control;
@@ -48,6 +55,7 @@ public class Reserve {
     @JoinColumn(name = "board_id",referencedColumnName = "id")
     private Board board;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id",referencedColumnName = "id")
     private Restaurant restaurant;

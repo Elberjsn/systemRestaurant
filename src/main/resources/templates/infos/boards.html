@@ -1,98 +1,91 @@
-<!doctype html>
-
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-
-
+<!DOCTYPE html>
+<html lang="pt">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dashboard Mesas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração de Mesas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
 </head>
+<body>
 
-<body class="bg-info">
-
-    <header th:replace="~{fragments/header :: restaurant}">
-
-    </header>
-
-    <div class="container-fluid text-center row justify-content-evenly m-2">
-
-        <div class="card col-3 " style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Mesas Livres Hoje</h5>
-
-                <span class="display-1" th:text="${freeBoards}">0</span>
+ <!-- Sidebar -->
+ <header th:replace="~{fragments/header :: header}">
 
 
-            </div>
-            
+ </header>
+
+
+    <!-- Conteúdo Principal -->
+    <div class="content">
+        <h2>Administração de Mesas</h2>
+
+        <!-- Botão Adicionar Mesa -->
+        <div class="d-flex justify-content-end mb-3">
+            <button class="btn btn-primary">+ Adicionar Mesa</button>
         </div>
 
-        <div class="card col-3 " style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Total de Mesas</h5>
-
-                <span class="display-1" th:text="${boardsQtd}" >0</span>
-
-
-            </div>
-            
-        </div>
-    </div>
-
-    <div class="container-fluid text-center row justify-content-evenly m-2">
-
-        <div class="card col-3 " style="width: 21rem;">
-            <div class="card-body">
-                <h5 class="card-title">Mesas</h5>
-                <ul class="list-group list-group-flush" style="max-height: 200px; overflow-y:auto; overflow-x:hidden">
-                    <li class="list-group-item row justify-content-evenly">
-                        <span class="col-6">Mesa</span>
-                        <span class="col-6">Cadeiras</span>
-                    </li>
-                        <li class="list-group-item row justify-content-evenly" th:each="boardsEntity : ${boardEntity}">
-                            <span class="col-6" th:text="${boardEntity.number}">Mesa</span>
-                            <span class="col-6" th:text="${boardEntity.capacity}">Cadeiras</span>
-                        </li>
-    
-                </ul>
-
-
-            </div>
-            
-        </div>
-
-        <div class="card col-3 " style="width: 25rem;">
-            <div class="card-body">
-                <h5 class="card-title">Nova Mesa</h5>
-                <ul class="list-group list-group-flush" style="max-height: 200px; overflow-y:auto; overflow-x:hidden">
-                    <li class="list-group-item row">
-                        <form th:action="@{/my/board/new}" th:object="${board}"  method="post">
-                            <div class="input-group">
-                            <span class="input-group-text">Nova Mesa</span>
-                            <input type="text" aria-label="Numero" placeholder="Numero" name="num" class="form-control" th:field="*{number}">
-                            <input type="number" min="1" aria-label="Quantidade" placeholder="Qtd" name="qtd" class="form-control" th:field="*{capacity}">
-                          </div>
-                          <button type="submit" class="btn btn-info">Nova Mesa</button>
-                        </form>
-                    </li>
-    
-                </ul>
-
-
-            </div>
-            
+        <!-- Tabela de Mesas -->
+        <div class="card p-3">
+            <h5 class="card-title">Lista de Mesas</h5>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Capacidade</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                     
+                </tbody>
+            </table>
         </div>
     </div>
+     <!-- Mesa -->
+     <div class="modal fade" id="newBoardModal" tabindex="-1" aria-labelledby="newBoardModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newBoardModalLabel">Nova Mesa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
 
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="mb-3 col-5">
+                            <label class="form-label" for="numNewBoard">Numero de Identificação: </label>
+                            <input class="form-control" type="number" id="numNewBoard" name="numNewBoard">
+                        </div>
+                        <div class=" mb-3 col-5">
+                            <label class="form-label" for="qtdNewBoard">Lugares: </label>
+                            <input class="form-control col-5" type="number" id="qtdNewBoard" name="qtdNewBoard">
+                        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+                    </div>
+                    <button type="button" class="btn btn-secondary" hx-post="/my/board/save" hx-target="#newBoard"
+                        hx-trigger="click delay:500ms" hx-include="#numNewBoard,#qtdNewBoard">Salvar Mesas</button>
+
+                    <div id="newBoard">
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Mesa Fim -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

@@ -14,23 +14,51 @@
 
 </head>
 <script>
-    
-    function addClient(){
+
+    function clientInputs(data) {
+        if (!data) {
+            dados = JSON.parse(data)
+
+            for (let key in dados) {
+                let name = document.getElementById("nameClient")
+                name.value = dados["name"]
+                name.disabled = true;
+
+                let email = document.getElementById("emailClient")
+                email.value = dados["email"]
+                email.disabled = true;
+
+                document.getElementById("idClient").value = dados["id"]
+            }
+        }
+
     }
     function btnsBoads(dados) {
 
         dados = JSON.parse(dados)
+
         var mesas = document.getElementById("mesas");
+
+        if (mesas.hasChildNodes()) {
+            mesas.removeChild(mesas.firstChild)
+        }
         var select = document.createElement('select')
-        select.id="selectBtn"
-        select.addEventListener("change",addClient())
+        select.id = "selectBoard"
+        select.name = "selectBoard"
+        select.required = true
+
+        select.addEventListener("change", function () {
+
+            document.getElementById("reserveClient").style.display = "block"
+        })
 
         var opt1 = document.createElement('option')
-        opt1.innerHTML="Mesa | Quantidade"
-        opt1.disabled=true
-        opt1.selected=true
+        opt1.innerHTML = "Mesa | Quantidade"
+        opt1.disabled = true
+        opt1.selected = true
         select.appendChild(opt1)
-        select.className="form-select"
+
+        select.className = "form-select"
         for (let key in dados) {
 
             var opt = document.createElement('option')
@@ -76,20 +104,80 @@
             }
         });
     }
+
+    function opensOrders(dados) {
+        dados = JSON.parse(dados)
+
+        var mesas = document.getElementById("orderOpenSelect");
+
+        if (mesas.hasChildNodes()) {
+            mesas.removeChild(mesas.firstChild)
+        }
+        var select = document.createElement('select')
+        select.id = "selectBoardOrder"
+        select.name = "selectBoardOrder"
+        select.required = true
+
+        select.addEventListener("change", function () {
+            document.getElementById("orderOpenSelect").style.display = "block"
+        })
+
+        var opt1 = document.createElement('option')
+        opt1.innerHTML = "Mesa"
+        opt1.disabled = true
+        opt1.selected = true
+        select.appendChild(opt1)
+        select.className = "form-select"
+
+        for (let key in dados) {
+
+            var opt = document.createElement('option')
+
+            opt.value = key
+
+            opt.innerHTML = key + " | " + dados[key]
+
+            select.appendChild(opt)
+
+        }
+        mesas.appendChild(select)
+    }
+
+    function reservesToday(data) {
+        dados = JSON.parse(data)
+        console.log(dados)
+
+        var reserves = document.getElementById("resersTodayDiv");
+        reserves.classList = "row"
+
+
+        for (let key in dados) {
+            let btn = document.createElement("input")
+            let label = document.createElement("label", { for: dados[key].id })
+            btn.type = "radio"
+
+            label.innerHTML = dados[key].name + ", Mesa:" + dados[key].board + ", Horario:" + dados[key].hoursStart
+
+            btn.id = dados[key].id
+            btn.name = "reserveToday"
+            btn.value = dados[key].id
+
+            label.setAttribute('for', dados[key].id)
+            btn.className = "col-2 m-1"
+            label.className = "col-9 m-1"
+            reserves.appendChild(btn)
+            reserves.appendChild(label)
+        }
+    }
 </script>
 
 <body>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h4 class="text-center text-white">Gerenciador</h4>
-        <a href="#">📊 Dashboard</a>
-        <a href="#">📅 Reservas</a>
-        <a href="#">🍽️ Mesas</a>
-        <a href="#">👨‍🍳 Funcionários</a>
-        <a href="#">🛒 Pedidos</a>
-        <a href="login.html">🚪 Sair</a>
-    </div>
+     <!-- Sidebar -->
+     <header th:replace="~{fragments/header :: header}">
+
+
+     </header>
 
     <!-- Conteúdo Principal -->
     <div class="content">
@@ -99,20 +187,24 @@
         <div class="d-flex justify-content-end mb-3">
             <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
                 data-bs-target="#newReserveModel">+ Nova Reserva</button>
+                
             <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#newBoardModal">+ Nova
                 Mesa</button>
+            <button class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#newOrderModal"
+                hx-post="/my/orders/init" hx-swap="none" hx-trigger="click delay:500ms"
+                hx-on::after-request="opensOrders(event.detail.xhr.responseText)">+ Novo Pedido</button>
 
-
-            <button class="btn btn-warning me-2">+ Novo Funcionário</button>
-            <button class="btn btn-danger">+ Novo Pedido</button>
+            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#newOrderModal"
+                hx-post="/my/reserve/init" hx-swap="none" hx-trigger="click delay:500ms"
+                hx-on::after-request="reservesToday(event.detail.xhr.responseText)">Entrada de Reserva</button>
         </div>
 
         <!-- Cards de Estatísticas -->
         <div class="row">
             <div class="col-md-4">
-                <div class="card text-white bg-primary mb-3">
-                    <div class="card-body" hx-post="/my/reserve/active" hx-target="#reserves"
-                        hx-trigger="load delay:500ms">
+                <div class="card text-white bg-primary mb-3" hx-post="/my/reserve/active" hx-target="#reserves"
+                    hx-trigger="load delay:500ms">
+                    <div class="card-body">
                         <h5 class="card-title">Reservas Ativas</h5>
                         <p class="card-text fs-3" id="reserves">
                             <i class="bi bi-arrow-clockwise"></i>
@@ -168,9 +260,9 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>101</td>
-                        <td>Maria Silva</td>
-                        <td>5</td>
+                        <td>#</td>
+                        <td>Lorem, ipsum dolor.</td>
+                        <td>0</td>
                     </tr>
                 </tbody>
             </table>
@@ -188,53 +280,81 @@
 
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="mb-3 col-5">
-                            <label class="form-label" for="dateNewReserve">Data: </label>
-                            <input class="form-control" type="date" id="dateNewReserve" name="dateNewReserve">
+                    <form hx-post="/my/reserve/save" hx-target="#resposta"
+                        onsubmit="document.getElementById(this).reset()">
+                        <div class="row">
+                            <div class="mb-3 col-4">
+                                <label class="form-label" for="dateNewReserve">Data: </label>
+                                <input class="form-control" type="date" id="dateNewReserve" name="dateNewReserve"
+                                    required>
+                            </div>
+                            <div class=" mb-3 col-4">
+                                <label class="form-label" for="timeNewReserve">Hora: </label>
+                                <input class="form-control col-5" type="time" id="timeNewReserve" name="timeNewReserve"
+                                    required>
+                            </div>
+                            <div class=" mb-3 col-3">
+                                <label class="form-label" for="btnConsulta">Buscar</label>
+                                <button type="button" class="btn btn-secondary form-control"
+                                    hx-post="/my/reserve/availableBoadsByDate" hx-swap="none"
+                                    hx-trigger="click delay:500ms" id="btnConsulta"
+                                    hx-on::after-request="btnsBoads(event.detail.xhr.responseText)"
+                                    hx-include="#dateNewReserve,#timeNewReserve">Mesas</button>
+                            </div>
+
                         </div>
-                        <div class=" mb-3 col-5">
-                            <label class="form-label" for="timeNewReserve">Hora: </label>
-                            <input class="form-control col-5" type="time" id="timeNewReserve" name="timeNewReserve">
+
+
+                        <div id="mesas"></div>
+
+                        <div id="reserveClient" style="display: none;">
+                            <div>
+                                <div class="mb-3">
+                                    <label for="tel" class="form-label">Telefone do Cliente</label>
+                                    <input type="tel" class="form-control" id="tel" name="tel" required
+                                        aria-describedby="emailHelp" placeholder="(99) 99999-9999"
+                                        pattern="^\([1-9]{2}\) (?:9[1-9])[0-9]{3}\-[0-9]{4}$" hx-get="/my/client/tel"
+                                        hx-swap="none" hx-trigger="blur"
+                                        hx-on::after-request="clientInputs(event.detail.xhr.responseText)">
+
+                                </div>
+
+                                <div class="row">
+                                    <input type="hidden" id="idClient" name="idClient">
+
+                                    <div class="mb-3 col-6 justify-content-evenly">
+                                        <label for="nameClient" class="form-label">Nome</label>
+                                        <input type="text" class="form-control" id="nameClient" name="nameClient"
+                                            required>
+                                    </div>
+                                    <div class="mb-3 col-6 justify-content-evenly">
+                                        <label for="emailClient" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="emailClient" name="emailClient"
+                                            required>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="mb-3 col-6 justify-content-evenly">
+                                        <label for="qtd" class="form-label">Quantidade de Pessoas</label>
+                                        <input type="number" min="1" class="form-control" id="qtd" name="qtd" required>
+                                    </div>
+                                    <div class="mb-3 col-6 justify-content-evenly">
+                                        <label for="obs" class="form-label">Obs</label>
+                                        <input type="text" class="form-control" id="obs" name="obs" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                            </div>
+
                         </div>
 
-                    </div>
-                    <button type="button" class="btn btn-secondary" hx-post="/my/reserve/availableBoadsByDate"
-                    hx-swap="none" hx-trigger="click delay:500ms"
-                        hx-on::after-request="btnsBoads(event.detail.xhr.responseText)"
-                        hx-include="#dateNewReserve,#timeNewReserve">Verificar Mesas</button>
-
-                    <div id="mesas">
-                        
-
-                    </div>
-
-                    <div id="reserveClient">
-                        <form>
-                            <div class="mb-3">
-                              <label for="exampleInputEmail1" class="form-label">Email address</label>
-                              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                              <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                            </div>
-                            <div class="mb-3">
-                              <label for="exampleInputPassword1" class="form-label">Password</label>
-                              <input type="password" class="form-control" id="exampleInputPassword1">
-                            </div>
-                            <div class="mb-3 form-check">
-                              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                              <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                          </form>
-
-                    </div>
-
-
+                    </form>
+                    <span class="text-info" id="resposta"></span>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar</button>
                 </div>
             </div>
         </div>
@@ -246,7 +366,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newReserveModelLabel">Nova Mesa</h5>
+                    <h5 class="modal-title" id="newBoardModalLabel">Nova Mesa</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
 
                 </div>
@@ -272,19 +392,45 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary">Salvar</button>
                 </div>
             </div>
         </div>
     </div>
-
     <!-- Mesa Fim -->
+
+    <!-- Order -->
+    <div class="modal fade" id="newOrderModal" tabindex="-1" aria-labelledby="newOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newOrderModalLabel">Reservas Para Hoje</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+
+                </div>
+                <div class="modal-body">
+                    <div id="resersTodayDiv" class="row p-1">
+
+                    </div>
+                    <div id="resultadoComanda"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+
+                    <button type="button" class="btn btn-primary" hx-target="#resultadoComanda"
+                        hx-include="[name=reserveToday]" hx-post="/my/orders/open/" hx-trigger="click" id="openReserve">Abir Comanda</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Order Fim -->
 
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     dataToday = new Date();
-    dataToday.setDate(dataToday.getDate()-1);
+    dataToday.setDate(dataToday.getDate() - 1);
     dateNewReserve.min = dataToday.toISOString().split("T")[0];
 </script>
 

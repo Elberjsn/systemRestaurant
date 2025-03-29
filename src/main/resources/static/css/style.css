@@ -145,3 +145,7 @@ body {
 .btn-primary:hover {
     background-color: #e65c00;
 }
+
+.card {
+    border-radius: 10px;
+}

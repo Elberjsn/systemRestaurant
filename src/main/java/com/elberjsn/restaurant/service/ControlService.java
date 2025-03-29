@@ -22,21 +22,47 @@ public class ControlService {
     @Autowired
     ConsumptionService consumptionService;
 
+    @Autowired
+    ReserveService reserveService;
+
     public Control initControl(Control control) {
-        return controlRepository.save(control);
+        
+        var c = controlRepository.save(control);
+        if (c.getId() != null) {
+            var r = control.getReserve();
+            r.setControl(c);
+            reserveService.initControl(r);
+        }
+        return c;
     }
 
     public Control controlById(Long id) {
         return controlRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Não Encontrado!"));
     }
-    public Control controlByNumber(int number){
+
+    public int countControls() {
+        return (int) controlRepository.findAll().stream().count();
+    }
+
+    public Control controlByNumber(int number) {
         return controlRepository.findByNumber(number).orElseThrow(() -> new EntityNotFoundException("Não Encontrado!"));
     }
 
-    public Double valueTotalControl(Long controlId) {
-       return consumptionService.valueTotalByControlId(controlId);
+    public Control openControl(Long idReserve) {
+        var reserve = reserveService.findById(idReserve);
+        Control control = new Control();
+        control.setDtOpen(LocalDateTime.now());
+        control.setNumber(countControls());
+        control.setReserve(reserve);
+
+        return initControl(control);
     }
-    public Control editControl(Control control){
+
+    public Double valueTotalControl(Long controlId) {
+        return consumptionService.valueTotalByControlId(controlId);
+    }
+
+    public Control editControl(Control control) {
         var newControl = controlById(control.getId());
         newControl.setDtOpen(control.getDtOpen());
         newControl.setDtClosed(control.getDtClosed());
@@ -46,21 +72,23 @@ public class ControlService {
 
         return controlRepository.save(newControl);
     }
-    public void paymentControl(Long id,String pay){
+
+    public void paymentControl(Long id, String pay) {
         var payControl = controlById(id);
 
         payControl.setDtClosed(LocalDateTime.now());
         payControl.setPaymentMethod(pay);
         payControl.setStatus(StatusControl.PAY);
     }
-    public void deleteControl(Long id){
+
+    public void deleteControl(Long id) {
         Control c = controlById(id);
         c.setStatus(StatusControl.CLOSED);
         controlRepository.save(c);
     }
 
-    public Double balanceToday(LocalDate dt){
-        var c =controlRepository.findByDtClosedBetween(dt.atTime(LocalTime.MIN), dt.atTime(LocalTime.MAX));
+    public Double balanceToday(LocalDate dt) {
+        var c = controlRepository.findByDtClosedBetween(dt.atTime(LocalTime.MIN), dt.atTime(LocalTime.MAX));
         return c.stream().mapToDouble(Control::getTotalValue).sum();
     }
 }

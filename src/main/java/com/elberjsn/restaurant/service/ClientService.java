@@ -27,7 +27,7 @@ public class ClientService {
         return clientRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Cliente não encontrado"));
     }
     public Client clientByPhone(String phone){
-        return clientRepository.findByPhone(phone).orElseThrow(()-> new EntityNotFoundException("Cliente não encontrado"));
+        return clientRepository.findByPhone(phone).orElse(new Client());
     }
     public Client clientByEmail(String phone){
         return clientRepository.findByPhone(phone).orElseThrow(()-> new EntityNotFoundException("Cliente não encontrado"));

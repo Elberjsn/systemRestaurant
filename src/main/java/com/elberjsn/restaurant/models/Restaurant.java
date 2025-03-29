@@ -3,6 +3,8 @@ package com.elberjsn.restaurant.models;
 import java.time.LocalTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -45,24 +47,27 @@ public class Restaurant {
     private String password;
     
     private String site;
-    private String typeKitchen;
 
    
-
+    @JsonIgnore
     @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Employee> employee;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id",referencedColumnName = "id")
     private Product product;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Board> board;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "restaurant",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Reserve> reserves;
 

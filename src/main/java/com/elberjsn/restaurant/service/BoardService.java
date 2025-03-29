@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class BoardService {
     ReserveService reserveService;
 
     @Transactional
+    @CacheEvict(value = "ReservesToday", allEntries = true)
     public Board saveBoard(Board board) {
         return boardRepository.save(board);
     }
@@ -29,6 +31,10 @@ public class BoardService {
     public List<Board> allBoards(Long idRestaurant) {
 
         return boardRepository.findByRestaurantId(idRestaurant);
+    }
+
+    public Board boardByNumber(int number,Long restaurant){
+        return boardRepository.findByNumberAndRestaurantId(number, restaurant);
     }
 
     @Transactional

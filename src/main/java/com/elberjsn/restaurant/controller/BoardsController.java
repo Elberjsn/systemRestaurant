@@ -13,8 +13,11 @@ import com.elberjsn.restaurant.models.Board;
 import com.elberjsn.restaurant.service.BoardService;
 import com.elberjsn.restaurant.service.RestaurantService;
 
+import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @Controller
 @RequestMapping("/my/board")
@@ -26,6 +29,11 @@ public class BoardsController {
     @Autowired
     RestaurantService restaurantService;
 
+    @GetMapping("/")
+    public String getMethodName(Model model) {
+        return "infos/boards";
+    }
+    
     @PostMapping("/disposables")
     public ResponseEntity<Integer> boardsActiveToday(HttpServletRequest request) {
         LocalDate today = LocalDate.now();

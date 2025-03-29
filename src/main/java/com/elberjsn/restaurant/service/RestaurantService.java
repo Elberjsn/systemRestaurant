@@ -36,7 +36,10 @@ public class RestaurantService {
     }
     public List<LocalTime> openingHours(Long idRetaurant){
         var retaurant = restaurantById(idRetaurant);
-        return List.of(retaurant.getOpening(),retaurant.getClosed());
+       if (retaurant.getOpening() ==null) {
+            return null;
+       }
+       return List.of(retaurant.getOpening(),retaurant.getClosed());
     }
     
     public Restaurant editRestaurantAll(Restaurant r){
@@ -48,7 +51,6 @@ public class RestaurantService {
         newRestaurant.setClosed(r.getClosed());
         newRestaurant.setPhone(r.getPhone());
         newRestaurant.setSite(r.getSite());
-        newRestaurant.setTypeKitchen(r.getTypeKitchen());
 
         return save(newRestaurant);
 

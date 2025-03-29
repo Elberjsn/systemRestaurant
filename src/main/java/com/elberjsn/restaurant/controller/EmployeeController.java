@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.elberjsn.restaurant.service.EmployeeService;
 
+import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -27,6 +29,10 @@ public class EmployeeController {
         var qtd = employeeService.EmployeeOnline(id).stream().count();
         
         return ResponseEntity.ok(qtd);
+    }
+    @GetMapping("/")
+    public String getMethodName(Model model) {
+        return "infos/employees";
     }
     
 }

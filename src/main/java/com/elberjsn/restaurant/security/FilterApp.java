@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,7 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-@WebFilter("/*")
+@WebFilter("/my/*")
+@Component
 public class FilterApp implements Filter {
 
     @Override
@@ -24,43 +27,46 @@ public class FilterApp implements Filter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-
-        if (verificaCookies(httpRequest, httpResponse) == true && verificaSessao(httpRequest) == true) {
-            chain.doFilter(request, response);
-        }
-        httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
-
         
+        if (httpRequest.getServletPath().contains("/my")) {
+
+            if (verificaCookies(httpRequest, httpResponse) == false && verificaSessao(httpRequest) == false) {
+                httpResponse.sendRedirect("/");
+                return;
+
+            }
+        }
+        chain.doFilter(request, response);
+        return;
+
     }
 
-    private Boolean verificaCookies(HttpServletRequest httpRequest,HttpServletResponse httpResponse) {
+    private Boolean verificaCookies(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         Optional<Cookie> tokenCookie = obterCookie(httpRequest, "Authorization");
+
         if (tokenCookie.isPresent()) {
             String token = tokenCookie.get().getValue();
             if (JwtUtil.validarToken(token) && JwtUtil.isTokenExpirado(token)) {
-                System.out.println("true");
-               return true;
+                System.out.println("---true");
+                return true;
             }
-            return false;
 
-        } else {
-            return false;
         }
+        return false;
     }
 
     private Boolean verificaSessao(HttpServletRequest httpRequest) {
 
-        HttpSession session = httpRequest.getSession(false); // Não cria uma sessão se não existir
+        HttpSession session = httpRequest.getSession(false); 
 
-        if (session != null && session.getAttribute("token") != null) {
-            System.out.println("true");
+        if (session != null && session.getAttribute("utilizadorId") != null) {
+            System.out.println("---true");
 
             return true;
 
-        } else {
-            return false;
         }
-        
+        return false;
+
     }
 
     private Optional<Cookie> obterCookie(HttpServletRequest request, String nome) {
